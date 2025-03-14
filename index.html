@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小一學習系統</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans HK', 'Comic Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #FFF3E0, #E1F5FE, #FCE4EC);
+            background-size: 300% 300%;
+            animation: bgGradient 15s ease infinite;
+            text-align: center;
+            color: #333;
+            overflow-x: hidden;
+        }
+        @keyframes bgGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .menu, .game, .result {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #ffffff, #f9f9f9);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            box-sizing: border-box;
+            position: relative;
+            display: none;
+        }
+        .visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .result.surprise-active {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            max-width: 100%;
+        }
+        h1 {
+            font-family: 'Comic Neue', sans-serif;
+            font-weight: 700;
+            font-size: 2.5em;
+            color: #FF5722;
+            text-shadow: 2px 2px 4px rgba(255, 87, 34, 0.3);
+            margin: 10px 0;
+        }
+        h2 {
+            font-family: 'Noto Sans HK', sans-serif;
+            font-weight: 700;
+            font-size: 1.8em;
+            color: #0288D1;
+            text-shadow: 1px 1px 3px rgba(2, 136, 209, 0.2);
+            margin: 15px 0;
+        }
+        h3 {
+            font-family: 'Comic Neue', sans-serif;
+            font-weight: 400;
+            font-size: 1.5em;
+            color: #7B1FA2;
+        }
+        button {
+            padding: 12px 25px;
+            margin: 8px;
+            background: linear-gradient(45deg, #FFB300, #FFCA28);
+            color: #fff;
+            font-family: 'Noto Sans HK', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+            box-shadow: 0 3px 8px rgba(255, 179, 0, 0.3);
+        }
+        button:hover {
+            box-shadow: 0 6px 12px rgba(255, 179, 0, 0.5);
+        }
+        button:active {
+            animation: bounce 0.3s;
+        }
+        button:disabled {
+            background: linear-gradient(45deg, #B0BEC5, #CFD8DC);
+            opacity: 0.6;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        @keyframes bounce {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #E0E0E0;
+            border-radius: 8px;
+            height: 25px;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #FF9800;
+        }
+        .progress-bar svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .progress-bar svg rect {
+            fill: none;
+            stroke: #FF5722;
+            stroke-width: 2;
+            stroke-dasharray: 10;
+            stroke-dashoffset: 0;
+            animation: dash 2s linear infinite;
+        }
+        @keyframes dash {
+            from { stroke-dashoffset: 0; }
+            to { stroke-dashoffset: -20; }
+        }
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #FF5722, #FF8A65);
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.6s ease-in-out;
+            position: relative;
+            z-index: 1;
+        }
+        .timer {
+            font-size: 1.3em;
+            margin: 10px 0;
+            color: #D81B60;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(216, 27, 96, 0.2);
+            transition: all 0.3s ease;
+        }
+        .timer.warning {
+            font-size: 1.6em;
+            color: #F44336;
+            text-shadow: 2px 2px 4px rgba(244, 67, 54, 0.4);
+            animation: pulseTimer 0.8s infinite;
+        }
+        @keyframes pulseTimer {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .question {
+            font-size: 1.4em;
+            color: #388E3C;
+            font-weight: 700;
+            margin: 15px 0;
+        }
+        .answers {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 100%;
+        }
+        .answers button {
+            width: 32%;
+            margin: 8px 0;
+            background: linear-gradient(45deg, #1976D2, #42A5F5);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        .answers button.selected {
+            background: linear-gradient(45deg, #00ACC1, #00E5FF);
+            transform: scale(1.1) rotate(2deg);
+            box-shadow: 0 5px 15px rgba(0, 172, 193, 0.4);
+            animation: pulse 0.5s;
+        }
+        .answers button.correct {
+            background: linear-gradient(45deg, #00C853, #00E676);
+            transform: scale(1.1) rotate(2deg);
+            box-shadow: 0 5px 15px rgba(0, 200, 83, 0.4);
+        }
+        .answers button.wrong-answer-correct {
+            background: #F44336;
+            animation: blink 1s infinite;
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .answers button:disabled:not(.selected):not(.correct):not(.wrong-answer-correct) {
+            background: linear-gradient(45deg, #B0BEC5, #CFD8DC);
+            opacity: 0.6;
+            transform: none;
+            box-shadow: none;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15) rotate(3deg); }
+            100% { transform: scale(1.1) rotate(2deg); }
+        }
+        .result ul {
+            list-style: none;
+            padding: 0;
+        }
+        .result li {
+            padding: 8px;
+            font-size: 1.2em;
+            color: #455A64;
+            cursor: pointer;
+            transition: transform 0.3s, color 0.3s;
+        }
+        .result li.wrong {
+            color: #F44336;
+            font-weight: 700;
+        }
+        .result li:hover {
+            color: #2196F3;
+            transform: translateX(8px);
+        }
+        #score {
+            font-size: 1.6em;
+            color: #FF5722;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(255, 87, 34, 0.3);
+        }
+        .surprise {
+            display: none;
+            margin-top: 20px;
+            transform: scale(0) rotateX(90deg);
+            transform-origin: center;
+            transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .surprise.active {
+            transform: scale(1) rotateX(0deg);
+        }
+        .surprise img {
+            max-width: 90vw;
+            max-height: 70vh;
+            border-radius: 15px;
+            border: 3px solid #FFCA28;
+        }
+        .surprise-message {
+            font-size: 1.2em;
+            color: #FF5722;
+            margin: 10px 0;
+            font-weight: 700;
+        }
+        .feedback {
+            font-size: 1.2em;
+            margin: 10px 0;
+            font-weight: 700;
+        }
+        .feedback.correct {
+            color: #388E3C;
+        }
+        .feedback.wrong {
+            color: #F44336;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            60% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        .surprise.active img {
+            animation: bounceIn 0.6s ease;
+        }
+        #dictationInput {
+            padding: 10px;
+            font-size: 1.2em;
+            border: 2px solid #FF9800;
+            border-radius: 8px;
+            width: 80%;
+            margin: 10px auto;
+            box-shadow: 0 3px 8px rgba(255, 152, 0, 0.3);
+        }
+        #audioContainer {
+            margin-top: 10px;
+        }
+        audio {
+            width: 100%;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu visible" id="menu">
+        <h1>📚 小一學習系統 🎉</h1>
+        <h2>✍️ 中文科</h2>
+        <button onclick="startGame('chinese', 'game1')">遊戲 1</button>
+        <button onclick="startGame('chinese', 'game2')">遊戲 2</button>
+        <h2>🇬🇧 英文科</h2>
+        <button onclick="startGame('english', 'game1')">遊戲 1</button>
+        <button onclick="startGame('english', 'game2')">遊戲 2</button>
+        <button onclick="startGame('english', 'dictation')">英文默書</button>
+        <h2>➕ 數學科</h2>
+        <button onclick="startGame('math', 'addition_subtraction')">加減數數</button>
+        <button onclick="startGame('math', 'time_date')">時間日期</button>
+        <h2>🌍 常識科</h2>
+        <button onclick="startGame('common', 'game1')">詞語測試</button>
+        <h2>🗣️ 普通話科</h2>
+        <button onclick="startGame('putonghua', 'initials')">聲母測試</button>
+        <button onclick="startGame('putonghua', 'finals')">韻母測試</button>
+        <button onclick="startGame('putonghua', 'tones')">聲調測試</button>
+    </div>
+
+    <div class="game" id="game">
+        <div class="progress-bar">
+            <svg><rect x="50%" y="1" width="49%" height="21"/></svg>
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="timer" id="timer">剩餘時間: 60秒</div>
+        <div class="question" id="question"></div>
+        <div class="answers" id="answers"></div>
+        <button id="submitBtn" onclick="submitAnswer()" disabled>提交</button>
+        <button onclick="nextQuestion()" id="nextBtn" style="display: none;">下一題</button>
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <div class="result" id="result">
+        <h2>總成績</h2>
+        <p id="score"></p>
+        <h3 id="recordTitle" style="display: block;">答題紀錄</h3>
+        <ul id="record"></ul>
+        <div class="surprise" id="surprise">
+            <h3>恭喜滿分！</h3>
+            <p class="surprise-message" id="surpriseMessage"></p>
+            <img id="rewardImg" alt="獎勵圖片">
+        </div>
+        <button onclick="backToMenu()">返回目錄</button>
+    </div>
+
+    <audio id="victorySound" src="https://www.soundjay.com/buttons/cheer.mp3"></audio>
+
+    <script>
+        let currentSubject, currentGame, currentQuestion = 0, score = 0, totalQuestions;
+        let answers = [], timer, timeLeft = 60, submitted = false;
+        const UNSPLASH_ACCESS_KEY = 'YOUR_UNSPLASH_ACCESS_KEY'; // 請替換為您的 Unsplash API Access Key
+
+        const commonQuestions = {
+            hygiene: [
+                { question: "每天________能讓身體更強壯，例如跑步或跳繩。", answer: "運動" },
+                { question: "吃飯時不能只吃自己喜歡的食物，否則容易________。", answer: "偏食" }
+            ],
+            family: [
+                { question: "爸爸的媽媽是我的________，我會常常陪她聊天。", answer: "祖母" }
+            ],
+            festival: [
+                { question: "在________的傳說中，人們用鞭炮趕走可怕的「年獸」。", answer: "春節" }
+            ]
+        };
+
+        const mathQuestions = {
+            addition_subtraction: [],
+            time_date: []
+        };
+
+        const putonghuaInitialsQuestions = [
+            { question: "「盪」的聲母是________。", answer: "d" },
+            { question: "「爸」的聲母是________。", answer: "b" }
+        ];
+
+        const putonghuaFinalsQuestions = [
+            { question: "「門」的韻母是________。", answer: "en" },
+            { question: "「奶」的韻母是________。", answer: "ai" }
+        ];
+
+        const putonghuaTonesQuestions = [
+            { question: "「媽」是第________聲。", answer: "1" },
+            { question: "「馬」是第________聲。", answer: "3" }
+        ];
+
+        const englishDictationQuestions = [
+            { audioUrl: "https://drive.google.com/uc?export=download&id=1SDqFJRvWUAihCIj2lpBjHP29tF2kMRUD", answer: "Hello, how are you?" }
+        ];
+
+        const putonghuaInitialsOptions = ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'k', 'h'];
+        const putonghuaFinalsOptions = ['an', 'en', 'ang', 'eng', 'ong', 'ai', 'ei', 'ao', 'ou'];
+        const putonghuaTonesOptions = ['1', '2', '3', '4'];
+
+        const encouragementMessages = [
+            "你太棒了！滿分達人！",
+            "完美表現，繼續加油！"
+        ];
+
+        let gameData = {
+            chinese: { game1: [], game2: [] },
+            english: { game1: [], game2: [], dictation: [] },
+            math: { addition_subtraction: [], time_date: [] },
+            common: { game1: [] },
+            putonghua: { initials: [], finals: [], tones: [] }
+        };
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function generateCountingQuestion() {
+            const group1 = Math.floor(Math.random() * 4) + 3;
+            const group2 = group1 * 2;
+            const k = Math.floor(Math.random() * 10) + 3;
+            const correctAnswer = group1 * k;
+            const remainder = correctAnswer % group2;
+            const question = `蔬果店有番茄一籃，如果以每${group1}個一數，剛好沒有剩餘；如果以每${group2}個一數，則剩餘${remainder}個。這盤番茄的數量可能是________個。`;
+            return { question, answer: correctAnswer.toString(), group1, group2, remainder };
+        }
+
+        function generateOptions(correctAnswer, isPutonghuaInitials = false, isPutonghuaFinals = false, isPutonghuaTones = false, theme = null, group1 = null, group2 = null, remainder = null) {
+            if (isPutonghuaInitials) return putonghuaInitialsOptions;
+            if (isPutonghuaFinals) return putonghuaFinalsOptions;
+            if (isPutonghuaTones) return putonghuaTonesOptions;
+            if (currentSubject === 'math' && currentGame === 'addition_subtraction') {
+                const correctNum = parseInt(correctAnswer);
+                let options = [correctAnswer];
+                let distractors = new Set();
+                while (distractors.size < 5) {
+                    const offset = Math.floor(Math.random() * 20) - 10;
+                    const distractor = correctNum + offset;
+                    if (distractor >= 0 && distractor !== correctNum && !distractors.has(distractor) && !(distractor % group1 === 0 && distractor % group2 === remainder)) {
+                        distractors.add(distractor);
+                    }
+                }
+                options = options.concat([...distractors].map(String));
+                return shuffleArray(options);
+            }
+            let options = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+            let otherAnswers = [];
+            for (let t in commonQuestions) {
+                otherAnswers = otherAnswers.concat(commonQuestions[t].map(q => Array.isArray(q.answer) ? q.answer[0] : q.answer));
+            }
+            otherAnswers = otherAnswers.filter(a => !options.includes(a));
+            otherAnswers = shuffleArray(otherAnswers).slice(0, 6 - options.length);
+            options = options.concat(otherAnswers);
+            return shuffleArray(options);
+        }
+
+        function startGame(subject, game) {
+            currentSubject = subject;
+            currentGame = game;
+            currentQuestion = 0;
+            score = 0;
+            answers = [];
+            submitted = false;
+            if (timer) clearInterval(timer);
+
+            if (subject === 'english' && game === 'dictation') {
+                totalQuestions = englishDictationQuestions.length;
+                gameData[subject][game] = englishDictationQuestions.map(q => ({
+                    audioUrl: q.audioUrl,
+                    answer: q.answer
+                }));
+            } else if (subject === 'putonghua' && game === 'initials') {
+                totalQuestions = putonghuaInitialsQuestions.length;
+                gameData[subject][game] = shuffleArray([...putonghuaInitialsQuestions]).map(q => ({
+                    question: q.question,
+                    options: generateOptions(q.answer, true, false, false),
+                    correct: [putonghuaInitialsOptions.indexOf(q.answer)]
+                }));
+            } else if (subject === 'putonghua' && game === 'finals') {
+                totalQuestions = putonghuaFinalsQuestions.length;
+                gameData[subject][game] = shuffleArray([...putonghuaFinalsQuestions]).map(q => ({
+                    question: q.question,
+                    options: generateOptions(q.answer, false, true, false),
+                    correct: [putonghuaFinalsOptions.indexOf(q.answer)]
+                }));
+            } else if (subject === 'putonghua' && game === 'tones') {
+                totalQuestions = putonghuaTonesQuestions.length;
+                gameData[subject][game] = shuffleArray([...putonghuaTonesQuestions]).map(q => ({
+                    question: q.question,
+                    options: generateOptions(q.answer, false, false, true),
+                    correct: [putonghuaTonesOptions.indexOf(q.answer)]
+                }));
+            } else if (subject === 'common' && game === 'game1') {
+                let allQuestions = [];
+                for (let theme in commonQuestions) {
+                    allQuestions = allQuestions.concat(commonQuestions[theme].map(q => ({ ...q, theme })));
+                }
+                totalQuestions = allQuestions.length;
+                gameData[subject][game] = shuffleArray([...allQuestions]).map(q => {
+                    const options = generateOptions(q.answer, false, false, false, q.theme);
+                    const correctIndices = Array.isArray(q.answer) ? q.answer.map(ans => options.indexOf(ans)).filter(idx => idx !== -1) : [options.indexOf(q.answer)];
+                    return { question: q.question, options, correct: correctIndices };
+                });
+            } else if (subject === 'math' && game === 'addition_subtraction') {
+                totalQuestions = 10;
+                let generatedQuestions = Array.from({ length: totalQuestions }, generateCountingQuestion);
+                gameData[subject][game] = generatedQuestions.map(q => {
+                    const options = generateOptions(q.answer, false, false, false, null, q.group1, q.group2, q.remainder);
+                    return { question: q.question, options, correct: [options.indexOf(q.answer)] };
+                });
+            } else {
+                totalQuestions = 10;
+                let allQuestions = [];
+                for (let theme in commonQuestions) {
+                    allQuestions = allQuestions.concat(commonQuestions[theme]);
+                }
+                gameData[subject][game] = shuffleArray([...allQuestions]).slice(0, totalQuestions).map(q => {
+                    const options = generateOptions(q.answer);
+                    const correctIndices = Array.isArray(q.answer) ? q.answer.map(ans => options.indexOf(ans)).filter(idx => idx !== -1) : [options.indexOf(q.answer)];
+                    return { question: q.question, options, correct: correctIndices };
+                });
+            }
+
+            hideElement('menu');
+            showElement('game');
+            setTimeout(() => {
+                document.getElementById('game').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+            loadQuestion();
+            startTimer();
+        }
+
+        function loadQuestion() {
+            if (currentQuestion >= totalQuestions) {
+                showResult();
+                return;
+            }
+            let qData = gameData[currentSubject][currentGame][currentQuestion];
+            let questionDiv = document.getElementById('question');
+            let answersDiv = document.getElementById('answers');
+            answersDiv.innerHTML = '';
+
+            if (currentGame === 'dictation') {
+                questionDiv.innerHTML = `
+                    <p>請聆聽以下音頻並輸入句子：</p>
+                    <div id="audioContainer">
+                        <audio controls id="dictationAudio">
+                            <source src="${qData.audioUrl}" type="audio/mpeg">
+                            您的瀏覽器不支援音頻播放。
+                        </audio>
+                    </div>
+                `;
+                let audioElement = document.getElementById('dictationAudio');
+                audioElement.addEventListener('error', (e) => {
+                    console.error('音頻載入失敗:', e);
+                    document.getElementById('feedback').innerText = '音頻載入失敗，請檢查網路或檔案連結。';
+                });
+                audioElement.addEventListener('loadeddata', () => {
+                    console.log('音頻成功載入');
+                });
+                let input = document.createElement('input');
+                input.type = 'text';
+                input.id = 'dictationInput';
+                answersDiv.appendChild(input);
+                let submitBtn = document.createElement('button');
+                submitBtn.innerText = '提交';
+                submitBtn.onclick = submitDictationAnswer;
+                answersDiv.appendChild(submitBtn);
+                document.getElementById('submitBtn').style.display = 'none';
+            } else {
+                questionDiv.innerText = qData.question;
+                qData.options.forEach((opt, idx) => {
+                    let btn = document.createElement('button');
+                    btn.innerText = opt;
+                    btn.onclick = () => selectAnswer(idx, btn);
+                    answersDiv.appendChild(btn);
+                });
+                document.getElementById('submitBtn').style.display = 'inline';
+                document.getElementById('submitBtn').disabled = true;
+            }
+            answers[currentQuestion] = [];
+            updateProgress();
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('feedback').innerText = '';
+            submitted = false;
+            setTimeout(() => {
+                document.getElementById('game').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        function submitDictationAnswer() {
+            let input = document.getElementById('dictationInput').value.trim();
+            let correctAnswer = gameData[currentSubject][currentGame][currentQuestion].answer;
+            let feedback = document.getElementById('feedback');
+            answers[currentQuestion] = [input];
+            if (input.toLowerCase() === correctAnswer.toLowerCase()) {
+                score++;
+                feedback.innerText = '正確！';
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.innerText = `錯誤！正確答案是：${correctAnswer}`;
+                feedback.className = 'feedback wrong';
+            }
+            document.getElementById('nextBtn').style.display = 'inline';
+            submitted = true;
+        }
+
+        function selectAnswer(index, button) {
+            if (submitted) return;
+            let buttons = document.querySelectorAll('#answers button');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+            answers[currentQuestion] = [index];
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        function submitAnswer() {
+            if (submitted) return;
+            let qData = gameData[currentSubject][currentGame][currentQuestion];
+            let selected = answers[currentQuestion];
+            let feedback = document.getElementById('feedback');
+            let buttons = document.querySelectorAll('#answers button');
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (qData.correct.includes(idx)) {
+                    btn.classList.add('correct');
+                }
+                if (selected.includes(idx) && !qData.correct.includes(idx)) {
+                    btn.classList.add('wrong-answer-correct');
+                }
+            });
+
+            if (JSON.stringify(selected.sort()) === JSON.stringify(qData.correct.sort())) {
+                score++;
+                feedback.innerText = '正確！';
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.innerText = `錯誤！正確答案是：${qData.correct.map(i => qData.options[i]).join(', ')}`;
+                feedback.className = 'feedback wrong';
+            }
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('nextBtn').style.display = 'inline';
+            submitted = true;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function showResult() {
+            clearInterval(timer);
+            hideElement('game');
+            showElement('result');
+            document.getElementById('score').innerText = `得分：${score} / ${totalQuestions}`;
+            let record = document.getElementById('record');
+            record.innerHTML = '';
+            gameData[currentSubject][currentGame].forEach((q, idx) => {
+                let userAnswer = currentGame === 'dictation' ? answers[idx][0] : answers[idx].map(i => q.options[i]).join(', ');
+                let correctAnswer = currentGame === 'dictation' ? q.answer : q.correct.map(i => q.options[i]).join(', ');
+                let li = document.createElement('li');
+                li.innerText = `${idx + 1}. ${q.question} 你的答案：${userAnswer} 正確答案：${correctAnswer}`;
+                if (currentGame === 'dictation' && userAnswer.toLowerCase() !== correctAnswer.toLowerCase()) {
+                    li.classList.add('wrong');
+                } else if (currentGame !== 'dictation' && JSON.stringify(answers[idx].sort()) !== JSON.stringify(q.correct.sort())) {
+                    li.classList.add('wrong');
+                }
+                record.appendChild(li);
+            });
+            if (score === totalQuestions) {
+                document.getElementById('result').classList.add('surprise-active');
+                let surprise = document.getElementById('surprise');
+                surprise.style.display = 'block';
+                setTimeout(() => {
+                    surprise.classList.add('active');
+                    document.getElementById('surpriseMessage').innerText = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+                    fetchRandomImage();
+                    document.getElementById('victorySound').play();
+                }, 100);
+            }
+        }
+
+        function fetchRandomImage() {
+            fetch(`https://api.unsplash.com/photos/random?query=celebration&client_id=${UNSPLASH_ACCESS_KEY}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('rewardImg').src = data.urls.regular;
+                })
+                .catch(() => {
+                    document.getElementById('rewardImg').src = 'https://via.placeholder.com/300x200?text=獎勵圖片';
+                });
+        }
+
+        function backToMenu() {
+            hideElement('result');
+            showElement('menu');
+            document.getElementById('result').classList.remove('surprise-active');
+            document.getElementById('surprise').classList.remove('active');
+            document.getElementById('surprise').style.display = 'none';
+        }
+
+        function startTimer() {
+            timeLeft = 60;
+            updateTimer();
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    submitAnswer();
+                }
+            }, 1000);
+        }
+
+        function updateTimer() {
+            let timerDiv = document.getElementById('timer');
+            timerDiv.innerText = `剩餘時間: ${timeLeft}秒`;
+            if (timeLeft <= 10) {
+                timerDiv.classList.add('warning');
+            } else {
+                timerDiv.classList.remove('warning');
+            }
+        }
+
+        function updateProgress() {
+            let progress = document.getElementById('progress');
+            progress.style.width = `${(currentQuestion / totalQuestions) * 100}%`;
+        }
+
+        function showElement(id) {
+            let element = document.getElementById(id);
+            element.classList.add('visible');
+        }
+
+        function hideElement(id) {
+            let element = document.getElementById(id);
+            element.classList.remove('visible');
+        }
+    </script>
+</body>
+</html>
