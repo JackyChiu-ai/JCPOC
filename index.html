@@ -350,13 +350,54 @@
         const commonQuestions = {
             hygiene: [
                 { question: "每天________能讓身體更強壯，例如跑步或跳繩。", answer: "運動" },
-                { question: "吃飯時不能只吃自己喜歡的食物，否則容易________。", answer: "偏食" }
+                { question: "吃飯時不能只吃自己喜歡的食物，否則容易________。", answer: "偏食" },
+                { question: "水果和蔬菜對身體________，要多吃才能長高。", answer: "有益" },
+                { question: "每天________早起身體好，上課也會更專心。", answer: "早睡早起" },
+                { question: "每天________能讓身體乾淨，記得用溫水和肥皂。", answer: "洗澡" },
+                { question: "和家人飯後一起去公園________，能幫助消化。", answer: "散步" },
+                { question: "打掃房間、整理書包能保持環境________。", answer: "整潔" },
+                { question: "打掃教室時，同學們一起________，有人掃地、有人擦桌子。", answer: "分工合作" }
+            ],
+            growth: [
+                { question: "乳牙脫落後，長出的新牙齒叫做________，要好好保護它們。", answer: "恆齒" },
+                { question: "從________到成年之前，我們會經歷身體的變化。", answer: "兒童期" },
+                { question: "從兒童變成大人的過程叫做________，身體會慢慢長高。", answer: "青春期" },
+                { question: "弟弟年紀小，我們要好好________他，教他穿衣服。", answer: "照顧" }
             ],
             family: [
-                { question: "爸爸的媽媽是我的________，我會常常陪她聊天。", answer: "祖母" }
+                { question: "爸爸的媽媽是我的________，我會常常陪她聊天。", answer: "祖母" },
+                { question: "當弟弟不小心打破杯子，我們要學會________他的過錯。", answer: "體諒" },
+                { question: "家人之間要互相________，這樣家庭才會溫暖。", answer: "相親相愛" },
+                { question: "弟弟得到新玩具時，願意和我一起________，我感到很開心。", answer: "分享" },
+                { question: "爸爸的哥哥是我的________。", answer: "伯父" },
+                { question: "媽媽的姐妹的丈夫是我的________。", answer: "姨丈" },
+                { question: "媽媽的弟弟是我的________。", answer: "舅父" },
+                { question: "伯父和叔叔是________的兄弟。", answer: "爸爸" },
+                { question: "姨母是________的姐妹，她常常來家裡做客。", answer: "媽媽" },
+                { question: "看到同學需要________時，我們要主動伸出援手。", answer: "幫忙" },
+                { question: "________是伯父的兒子。", answer: "堂兄、堂弟" },
+                { question: "堂妹、堂妹是________的女兒。（請選出所有正確答案）", answer: ["伯父", "叔叔", "嬸嬸"] },
+                { question: "伯父、叔叔和姑母都是________的兄弟姊妹。", answer: "爸爸" },
+                { question: "________是姨母、姨丈的兒子。", answer: "表哥、表弟" },
+                { question: "________是姑母、姑丈的女兒。", answer: "表姐、表妹" },
+                { question: "________是爸爸的弟弟。", answer: "叔叔" },
+                { question: "________是叔叔的妻子。", answer: "嬸嬸" },
+                { question: "________是姑母的丈夫。", answer: "姑丈" },
+                { question: "________是爸爸的姐妹。", answer: "姑母" },
+                { question: "________是媽媽的爸爸。", answer: "外祖父" },
+                { question: "________是爸爸的爸爸。", answer: "祖父" }
             ],
             festival: [
-                { question: "在________的傳說中，人們用鞭炮趕走可怕的「年獸」。", answer: "春節" }
+                { question: "在________的傳說中，人們用鞭炮趕走可怕的「年獸」。", answer: "春節" },
+                { question: "春節時，家家戶戶會在門上貼________，寫上吉祥話。", answer: "揮春" },
+                { question: "春節期間，長輩會給小朋友________，代表祝福。", answer: "利是" },
+                { question: "和家人一起________是春節的重要習俗，互相說恭喜。", answer: "拜年" },
+                { question: "每個國家都有不同的________，例如中秋節吃月餅。", answer: "習俗" },
+                { question: "生日時，全家人會一起________，唱生日歌、吃蛋糕。", answer: "慶祝" },
+                { question: "新年前夕，全家人團聚一起吃________，桌上有很多好吃的菜。", answer: "年夜飯" },
+                { question: "過年時，長輩會送我們________，甜甜的象徵好運氣。", answer: "糖果" },
+                { question: "和好朋友一起遊戲時，我感到非常________。", answer: "快樂" },
+                { question: "我們要________老師和長輩，對他們說話要有禮貌。", answer: "尊敬" }
             ]
         };
 
@@ -367,30 +408,120 @@
 
         const putonghuaInitialsQuestions = [
             { question: "「盪」的聲母是________。", answer: "d" },
-            { question: "「爸」的聲母是________。", answer: "b" }
+            { question: "「爸」的聲母是________。", answer: "b" },
+            { question: "「口」的聲母是________。", answer: "k" },
+            { question: "「拉」的聲母是________。", answer: "l" },
+            { question: "「米」的聲母是________。", answer: "m" },
+            { question: "「你」的聲母是________。", answer: "n" },
+            { question: "「好」的聲母是________。", answer: "h" },
+            { question: "「工」的聲母是________。", answer: "g" },
+            { question: "「笛」的聲母是________。", answer: "d" },
+            { question: "「拿」的聲母是________。", answer: "n" },
+            { question: "「樂」的聲母是________。", answer: "l" },
+            { question: "「梯」的聲母是________。", answer: "t" },
+            { question: "「哥」的聲母是________。", answer: "g" },
+            { question: "「歌」的聲母是________。", answer: "g" },
+            { question: "「客」的聲母是________。", answer: "k" },
+            { question: "「可」的聲母是________。", answer: "k" },
+            { question: "「護」的聲母是________。", answer: "h" },
+            { question: "「盒」的聲母是________。", answer: "h" },
+            { question: "「哭」的聲母是________。", answer: "k" },
+            { question: "「卡」的聲母是________。", answer: "k" },
+            { question: "「河」的聲母是________。", answer: "h" },
+            { question: "「桐」的聲母是________。", answer: "t" },
+            { question: "「裏」的聲母是________。", answer: "l" },
+            { question: "「都」的聲母是________。", answer: "d" },
+            { question: "「奶」的聲母是________。", answer: "n" },
+            { question: "「弟」的聲母是________。", answer: "d" },
+            { question: "「他」的聲母是________。", answer: "t" },
+            { question: "「了」的聲母是________。", answer: "l" },
+            { question: "「您」的聲母是________。", answer: "n" },
+            { question: "「的」的聲母是________。", answer: "d" },
+            { question: "「暖」的聲母是________。", answer: "n" },
+            { question: "「得」的聲母是________。", answer: "d" },
+            { question: "「特」的聲母是________。", answer: "t" },
+            { question: "「各」的聲母是________。", answer: "g" },
+            { question: "「空」的聲母是________。", answer: "k" },
+            { question: "「顧」的聲母是________。", answer: "g" },
+            { question: "「火」的聲母是________。", answer: "h" },
+            { question: "「蝌」的聲母是________。", answer: "k" },
+            { question: "「喝」的聲母是________。", answer: "h" },
+            { question: "「鼓」的聲母是________。", answer: "g" },
+            { question: "「賀」的聲母是________。", answer: "h" }
         ];
 
         const putonghuaFinalsQuestions = [
             { question: "「門」的韻母是________。", answer: "en" },
-            { question: "「奶」的韻母是________。", answer: "ai" }
+            { question: "「奶」的韻母是________。", answer: "ai" },
+            { question: "「同」的韻母是________。", answer: "ong" },
+            { question: "「妹」的韻母是________。", answer: "ei" },
+            { question: "「登」的韻母是________。", answer: "eng" },
+            { question: "「放」的韻母是________。", answer: "ang" },
+            { question: "「頭」的韻母是________。", answer: "ou" },
+            { question: "「貓」的韻母是________。", answer: "ao" },
+            { question: "「海」的韻母是________。", answer: "ai" },
+            { question: "「飛」的韻母是________。", answer: "ei" },
+            { question: "「瘦」的韻母是________。", answer: "ou" },
+            { question: "「上」的韻母是________。", answer: "ang" },
+            { question: "「堂」的韻母是________。", answer: "ang" },
+            { question: "「伴」的韻母是________。", answer: "an" },
+            { question: "「幫」的韻母是________。", answer: "ang" },
+            { question: "「忙」的韻母是________。", answer: "ang" },
+            { question: "「飯」的韻母是________。", answer: "an" },
+            { question: "「燈」的韻母是________。", answer: "eng" },
+            { question: "「桶」的韻母是________。", answer: "ong" },
+            { question: "「讓」的韻母是________。", answer: "ang" },
+            { question: "「口」的韻母是________。", answer: "ou" },
+            { question: "「味」的韻母是________。", answer: "ei" },
+            { question: "「真」的韻母是________。", answer: "en" },
+            { question: "「高」的韻母是________。", answer: "ao" },
+            { question: "「帶」的韻母是________。", answer: "ai" },
+            { question: "「黑」的韻母是________。", answer: "ei" },
+            { question: "「板」的韻母是________。", answer: "an" },
+            { question: "「姥」的韻母是________。", answer: "ao" },
+            { question: "「刀」的韻母是________。", answer: "ao" },
+            { question: "「狗」的韻母是________。", answer: "ou" },
+            { question: "「頭」的韻母是________。", answer: "ou" },
+            { question: "「長」的韻母是________。", answer: "ang" },
+            { question: "「張」的韻母是________。", answer: "ang" },
+            { question: "「們」的韻母是________。", answer: "en" },
+            { question: "「三」的韻母是________。", answer: "an" },
+            { question: "「冬」的韻母是________。", answer: "ong" },
+            { question: "「長」的韻母是________。", answer: "ang" },
+            { question: "「好」的韻母是________。", answer: "ao" },
+            { question: "「來」的韻母是________。", answer: "ai" },
+            { question: "「安」的韻母是________。", answer: "an" },
+            { question: "「恩」的韻母是________。", answer: "en" },
+            { question: "「骯」的韻母是________。", answer: "ang" },
+            { question: "「髒」的韻母是________。", answer: "ang" },
+            { question: "「搬」的韻母是________。", answer: "an" },
+            { question: "「難」的韻母是________。", answer: "an" },
+            { question: "「分」的韻母是________。", answer: "en" }
         ];
 
         const putonghuaTonesQuestions = [
             { question: "「媽」是第________聲。", answer: "1" },
-            { question: "「馬」是第________聲。", answer: "3" }
-        ];
-
-        const englishDictationQuestions = [
-            { audioUrl: "./Term2-dict3.MP3", answer: "Hello, how are you?" }
+            { question: "「馬」是第________聲。", answer: "3" },
+            { question: "「罵」是第________聲。", answer: "4" },
+            { question: "「麻」是第________聲。", answer: "2" },
+            { question: "「包」是第________聲。", answer: "1" },
+            { question: "「跑」是第________聲。", answer: "3" }
         ];
 
         const putonghuaInitialsOptions = ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'k', 'h'];
-        const putonghuaFinalsOptions = ['an', 'en', 'ang', 'eng', 'ong', 'ai', 'ei', 'ao', 'ou'];
+        const putonghuaFinalsOptions = ['an', 'en', 'ang', 'eng', 'ong', 'ai', 'ei', 'ao', 'ou', 'a', 'o', 'e', 'i', 'u', 'ü'];
         const putonghuaTonesOptions = ['1', '2', '3', '4'];
 
         const encouragementMessages = [
             "你太棒了！滿分達人！",
-            "完美表現，繼續加油！"
+            "完美表現，繼續加油！",
+            "你是學習小天才！",
+            "滿分！真了不起！",
+            "太厲害了，獎盃屬於你！"
+        ];
+
+        const englishDictationQuestions = [
+            { audioUrl: "./Term2-dict3.MP3", answer: "Hello, how are you?" }
         ];
 
         let gameData = {
