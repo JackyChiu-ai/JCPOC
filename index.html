@@ -6,6 +6,7 @@
     <title>小一學習系統</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* 保持不變的樣式部分省略 */
         body {
             font-family: 'Noto Sans HK', 'Comic Neue', sans-serif;
             margin: 0;
@@ -291,6 +292,7 @@
             width: 100%;
             max-width: 600px;
         }
+        /* 其他樣式保持不變 */
     </style>
 </head>
 <body>
@@ -344,8 +346,9 @@
 
     <script>
         let currentSubject, currentGame, currentQuestion = 0, score = 0, totalQuestions;
-        let answers = [], timer, timeLeft = 60, submitted = false;
+        let answers = [], timer, timeLeft, submitted = false;
         const UNSPLASH_ACCESS_KEY = 'YOUR_UNSPLASH_ACCESS_KEY'; // 請替換為您的 Unsplash API Access Key
+
 
         const commonQuestions = {
             hygiene: [
@@ -519,7 +522,6 @@
             "滿分！真了不起！",
             "太厲害了，獎盃屬於你！"
         ];
-
         const englishDictationQuestions = [
             { audioUrl: "./Term2-dict3.MP3", answer: "Hello, how are you?" }
         ];
@@ -652,7 +654,6 @@
                 document.getElementById('game').scrollIntoView({ behavior: 'smooth' });
             }, 100);
             loadQuestion();
-            startTimer();
         }
 
         function loadQuestion() {
@@ -693,7 +694,7 @@
                 answersDiv.appendChild(submitBtn);
                 document.getElementById('submitBtn').style.display = 'none';
             } else {
-                questionDiv.innerText = qData.question;
+                questionDiv.innerText = qData.correct.length > 1 ? `${qData.question}（多選題，請選出所有正確答案）` : qData.question;
                 qData.options.forEach((opt, idx) => {
                     let btn = document.createElement('button');
                     btn.innerText = opt;
@@ -708,6 +709,8 @@
             document.getElementById('nextBtn').style.display = 'none';
             document.getElementById('feedback').innerText = '';
             submitted = false;
+            if (timer) clearInterval(timer); // 清除舊計時器
+            startTimer(); // 每題開始時重置計時器
             setTimeout(() => {
                 document.getElementById('game').scrollIntoView({ behavior: 'smooth' });
             }, 100);
@@ -728,15 +731,32 @@
             }
             document.getElementById('nextBtn').style.display = 'inline';
             submitted = true;
+            if (timer) clearInterval(timer); // 提交後停止計時器
         }
 
         function selectAnswer(index, button) {
             if (submitted) return;
-            let buttons = document.querySelectorAll('#answers button');
-            buttons.forEach(btn => btn.classList.remove('selected'));
-            button.classList.add('selected');
-            answers[currentQuestion] = [index];
-            document.getElementById('submitBtn').disabled = false;
+            let qData = gameData[currentSubject][currentGame][currentQuestion];
+            let isMultipleChoice = qData.correct.length > 1;
+
+            if (isMultipleChoice) {
+                // 多選模式：切換選擇狀態
+                if (button.classList.contains('selected')) {
+                    button.classList.remove('selected');
+                    answers[currentQuestion] = answers[currentQuestion].filter(i => i !== index);
+                } else {
+                    button.classList.add('selected');
+                    answers[currentQuestion].push(index);
+                }
+            } else {
+                // 單選模式：清除其他選擇並選中當前
+                let buttons = document.querySelectorAll('#answers button');
+                buttons.forEach(btn => btn.classList.remove('selected'));
+                button.classList.add('selected');
+                answers[currentQuestion] = [index];
+            }
+
+            document.getElementById('submitBtn').disabled = answers[currentQuestion].length === 0;
         }
 
         function submitAnswer() {
@@ -767,6 +787,7 @@
             document.getElementById('submitBtn').disabled = true;
             document.getElementById('nextBtn').style.display = 'inline';
             submitted = true;
+            if (timer) clearInterval(timer); // 提交後停止計時器
         }
 
         function nextQuestion() {
@@ -775,7 +796,7 @@
         }
 
         function showResult() {
-            clearInterval(timer);
+            if (timer) clearInterval(timer);
             hideElement('game');
             showElement('result');
             document.getElementById('score').innerText = `得分：${score} / ${totalQuestions}`;
@@ -826,7 +847,12 @@
         }
 
         function startTimer() {
-            timeLeft = 60;
+            // 根據遊戲模式設置不同的計時器時間
+            if (currentSubject === 'english' && currentGame === 'dictation') {
+                timeLeft = 1200; // 20 分鐘 = 1200 秒
+            } else {
+                timeLeft = 60; // 其他模式 60 秒
+            }
             updateTimer();
             timer = setInterval(() => {
                 timeLeft--;
@@ -840,7 +866,13 @@
 
         function updateTimer() {
             let timerDiv = document.getElementById('timer');
-            timerDiv.innerText = `剩餘時間: ${timeLeft}秒`;
+            if (timeLeft >= 60) {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                timerDiv.innerText = `剩餘時間: ${minutes}分${seconds}秒`;
+            } else {
+                timerDiv.innerText = `剩餘時間: ${timeLeft}秒`;
+            }
             if (timeLeft <= 10) {
                 timerDiv.classList.add('warning');
             } else {
